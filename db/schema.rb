@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_01_143557) do
+ActiveRecord::Schema.define(version: 2020_05_01_193546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,14 @@ ActiveRecord::Schema.define(version: 2020_05_01_143557) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "portfolios", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_portfolios_on_user_id"
+  end
+
   create_table "services", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "provider"
@@ -58,6 +66,13 @@ ActiveRecord::Schema.define(version: 2020_05_01_143557) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_services_on_user_id"
+  end
+
+  create_table "trades", force: :cascade do |t|
+    t.bigint "portfolio_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["portfolio_id"], name: "index_trades_on_portfolio_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -76,5 +91,7 @@ ActiveRecord::Schema.define(version: 2020_05_01_143557) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "portfolios", "users"
   add_foreign_key "services", "users"
+  add_foreign_key "trades", "portfolios"
 end
